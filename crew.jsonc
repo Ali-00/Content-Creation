@@ -11,34 +11,52 @@
   "tasks": [
     {
       "name": "monitor_financial_news",
-      "description": "Monitor and analyze the latest news and updates related to the financial markets, with a particular focus on {subject}. Identify and summarize the most relevant and impactful news items that could influence market trends or investor decisions. Utilize financial news APIs and real-time market data tools to gather up-to-date information. Focus on detecting trends, regulatory changes, or significant economic indicators that directly relate to {subject}.",
-      "expected_output": "A detailed summary report highlighting the most impactful financial news and updates related to {subject}. This report should include key insights and their potential implications for the market and content strategy.",
+
+      "description": "Research the latest credible financial-market developments related to {subject}. Identify no more than 8 highly relevant sources. Prioritize regulators, official company announcements, recognized financial publications, established research institutions, and reputable market-data providers. Read no more than 5 webpages in detail. If a webpage fails, redirects repeatedly, requires authentication, or cannot be accessed, skip it and use another source. Do not retry a failed URL more than once. Never invent URLs, publications, domains, files, statistics, or source names. Never use file:// URLs. Stop searching once sufficient credible evidence has been collected.",
+
+      "expected_output": "A concise report containing 5 to 8 important financial-market developments related to {subject}. For each development, include the main finding, why it matters, the possible market implication, and the source URL. Clearly distinguish confirmed facts from interpretation. Exclude inaccessible and failed sources.",
+
       "agent": "lead_market_analyst"
     },
+
     {
       "name": "analyze_market_data",
-      "description": "Analyze market data and trends related to {subject}, with a focus on uncovering patterns, opportunities, and risks that could be leveraged in content creation. Use advanced data analytics tools to process relevant datasets and generate actionable insights. Pay special attention to how {subject} influences market movements, investor sentiment, and economic indicators.",
-      "expected_output": "A comprehensive analysis report highlighting key market trends and actionable insights related to {subject}. The report should include relevant data visualizations or clearly described visualization recommendations, along with practical recommendations for content creation.",
+
+      "description": "Analyze the market research supplied through task context for {subject}. Identify major patterns, opportunities, risks, investor-sentiment signals, and possible economic implications. Use only the evidence supplied by the Lead Market Analyst. Do not conduct independent web searches, access local files, invent datasets, fabricate numerical findings, or claim to have produced charts that were not actually generated. When precise numerical data is unavailable, recommend an appropriate visualization and explain what it should show.",
+
+      "expected_output": "A structured analysis of the most important market patterns, opportunities, risks, sentiment indicators, and content angles related to {subject}. Include evidence-based recommendations and, where useful, clearly described visualization concepts.",
+
       "agent": "chief_data_strategist",
+
       "context": [
         "monitor_financial_news"
       ]
     },
+
     {
       "name": "create_content",
-      "description": "Based on the insights produced by the Market News Monitor and Data Analyst agents, create high-quality and engaging content that educates and informs the target audience about {subject}. Produce multiple content formats, including a blog post and social media updates, that clearly communicate the key findings and recommendations. Incorporate relevant data visualizations, infographic concepts, or other multimedia suggestions where appropriate.",
-      "expected_output": "A collection of high-quality content pieces related to {subject}, including a polished blog post and social media updates, with suitable data visualization, infographic, or multimedia recommendations.",
+
+      "description": "Create high-quality financial content about {subject} using only the market-news report and strategic analysis supplied through task context. Produce a polished blog post and suitable social-media updates that clearly communicate the main developments, insights, opportunities, risks, and recommendations. Do not search the web, open URLs, access local files, invent citations, create fake sources, or add unsupported numerical claims.",
+
+      "expected_output": "A polished blog post and a set of social-media updates about {subject}. The content should be engaging, informative, evidence-based, and suitable for a financial audience. Include practical multimedia or infographic recommendations where appropriate, without claiming that ungenerated assets already exist.",
+
       "agent": "creative_content_director",
+
       "context": [
         "monitor_financial_news",
         "analyze_market_data"
       ]
     },
+
     {
       "name": "quality_assurance",
-      "description": "Review and refine the content created about {subject} to ensure it meets high standards of accuracy, clarity, consistency, readability, and brand alignment. Proofread and edit the content, checking for factual inconsistencies, unsupported claims, repetition, weak structure, and tone issues. Confirm that the content accurately reflects the insights and recommendations produced by the Market News Monitor and Data Analyst agents. Format the final content in Markdown using appropriate headings, paragraphs, bullet points, and links where relevant. Ensure each major section contains at least two paragraphs.",
-      "expected_output": "A finalized and thoroughly reviewed set of content pieces related to {subject}, formatted in clean Markdown. The final output should include a well-structured blog post and refined social media updates, with clear headings, readable paragraphs, useful bullet points where appropriate, and each major section containing at least two paragraphs.",
+
+      "description": "Review and refine the content created about {subject}. Check factual consistency, clarity, structure, readability, tone, engagement, and alignment with the intended financial-media brand voice. Compare every important claim against the supplied market-news report and strategic analysis. Remove unsupported statements, invented citations, placeholder websites, fake URLs, repeated ideas, and references to files that were not provided. Do not introduce new facts, statistics, sources, or market claims. Format the final output in clean Markdown with clear headings, paragraphs, and bullet points where useful.",
+
+      "expected_output": "A finalized Markdown content package about {subject}, including a polished blog post and refined social-media updates. The final content must be accurate, well-structured, readable, engaging, and fully supported by the supplied research and analysis.",
+
       "agent": "chief_content_officer",
+
       "context": [
         "monitor_financial_news",
         "analyze_market_data",
