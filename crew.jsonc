@@ -1,0 +1,119 @@
+{
+  // Display name for this crew
+  "name": "Content-Creation",
+
+  // Agents to include — each must have a matching agents/<name>.jsonc file
+  "agents": ["lead_market_analyst", "chief_data_strategist", "creative_content_director", "chief_content_officer"],
+
+  // Task definitions — executed in order for sequential process
+  "tasks": [
+    {
+      // Task identifier
+      "name": "monitor_financial_news",
+
+      // What the task should accomplish
+      // Use {placeholder} inputs here; crewai run prompts for missing values
+      "description": "Monitor and analyze the latest news and updates related to the financial markets, with a particular focus on {subject}. Identify and summarize the most relevant and impactful news items that could influence market trends or investor decisions. Utilize financial news APIs and real-time market data tools to gather up-to-date information. Focus on detecting trends, regulatory changes, or significant economic indicators that directly relate to {subject}.",
+
+      // Clear definition of what the output should look like
+      "expected_output": "A detailed summary report highlighting the most impactful financial news and updates related to {subject}. This report should include key insights and their potential implications for the market and content strategy.",
+
+      // Optional task guardrail(s) validate output before completion
+      // Use "guardrail" for one rule or "guardrails" for many
+      // Failed guardrails retry up to guardrail_max_retries times
+      // "guardrail": "Every factual claim needs context support.",
+      // "guardrails": [
+      //   "Every factual claim must be supported by context.",
+      //   "The answer must match the expected output format."
+      // ],
+      // "guardrail_max_retries": 2,
+
+      // Advanced task options:
+      // Docs: https://docs.crewai.com/concepts/tasks
+      // "type": "ConditionalTask",
+      // "condition": { "python": "my_project.conditions.should_run" },
+      // "output_json": { "python": "my_project.models.ReportOutput" },
+      // "output_pydantic": null,
+      // "response_model": null,
+      // "converter_cls": { "python": "my_project.converters.CustomConverter" },
+      // "markdown": false,
+      // "input_files": { "brief": "data/brief.txt" },
+      // "security_config": {},
+
+      // Which agent handles this task
+      "agent": "lead_market_analyst"
+
+      // "tools": [],
+      // "human_input": false,
+      // "async_execution": false
+    },
+    {
+      "id": "analyze_market_data",
+      "description": "Analyze market data and trends related to {subject}, with a focus on uncovering patterns, opportunities, and risks that could be leveraged in content creation. Use advanced data analytics tools to process large datasets and generate actionable insights. Pay special attention to how {subject} influences market movements, investor sentiment, and economic indicators.",
+      "expected_output": "A comprehensive analysis report that highlights key market trends and actionable insights related to {subject}. The report should include data visualizations and clear recommendations for content creation.",
+      "agent": "chief_data_strategist"
+    },
+    {
+      "id": "create_content",
+      "description": "Based on the insights provided by the Market News Monitor and Data Analyst agents, create high-quality, engaging content that educates and informs the target audience about {subject}. Produce various types of content, including blog posts and social media updates, that effectively communicate the insights gathered. Ensure the content clearly conveys the key findings and recommendations related to {subject}. Incorporate data visualizations, infographics, or other multimedia elements where applicable.",
+      "expected_output": "A collection of high-quality content pieces related to {subject}, including blog posts and social media updates, complete with integrated multimedia elements.",
+      "agent": "creative_content_director",
+      "context": [
+        "monitor_financial_news", "analyze_market_data"
+      ]
+    },
+    {
+      "id": "quality_assurance",
+      "description": "Review and refine the content created on {subject} to ensure it meets the highest standards of accuracy, clarity, and brand alignment. Thoroughly proofread and edit the content, checking for errors, inconsistencies, and alignment with the brand voice. Ensure that the content accurately reflects the key insights and recommendations provided by the Data Analyst and Market News Monitor agents. Ensure that the final content is well-formatted in Markdown using appropriate headers, bullet points, links, and other formatting features to enhance readability and engagement.",
+      "expected_output": "A finalized set of content pieces related to {subject}, thoroughly reviewed and formatted in Markdown. The content should be well-structured with appropriate use of headers, bullet points, links, and other Markdown features. Each section should contain at least two paragraphs.",
+      "agent": "chief_content_officer"
+    }
+
+  ],
+
+  // Execution process
+  // "sequential" — tasks run in order, each receiving prior task outputs
+  // "hierarchical" — a manager agent delegates tasks (requires manager_llm)
+  "process": "sequential",
+
+  // Enable verbose logging during execution
+  "verbose": true,
+
+  // Enable crew memory — persists context and learnings across tasks
+  "memory": false,
+
+  // Automatically plan the execution strategy before running tasks
+  // "planning": false,
+
+  // LLM for the planning step (used when planning is true)
+  // "planning_llm": "openai/gpt-4o",
+
+  // LLM for the manager agent (required when process is "hierarchical")
+  // "manager_llm": "openai/gpt-4o",
+
+  // Crew-level LLM fields also accept object form for custom endpoints
+  // "chat_llm": {"model": "llama3", "provider": "ollama", "base_url": "http://localhost:11434"},
+
+  // Advanced crew options:
+  // Docs: https://docs.crewai.com/concepts/crews
+  // For hierarchical crews, manager_agent can reference an agents/<name>.jsonc file
+  // that is not included in the "agents" list.
+  // "manager_agent": "lead_market_analyst",
+  // "before_kickoff_callbacks": [{"python": "my_project.callbacks.before_kickoff"}],
+  // "after_kickoff_callbacks": [{"python": "my_project.callbacks.after_kickoff"}],
+  // "function_calling_llm": "openai/gpt-4o-mini",
+  // "max_rpm": null,
+  // "cache": true,
+  // "knowledge_sources": [],
+  // "embedder": {},
+  // "output_log_file": "crew.log",
+  // "stream": false,
+  // "tracing": false,
+  // "security_config": {},
+
+  // Optional runtime input defaults.
+  // Use {placeholder} in agent or task text, for example:
+  // "description": "Research {topic} and write a brief"
+  // `crewai run` prompts for any placeholders missing from this object.
+  "inputs": {}
+}
