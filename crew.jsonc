@@ -1,66 +1,66 @@
 {
-  "name": "Content-Creation",
+  "name": "AI-LinkedIn-Content-Engine",
 
   "agents": [
-    "lead_market_analyst",
-    "chief_data_strategist",
-    "creative_content_director",
-    "chief_content_officer"
+    "ai_trend_researcher",
+    "technical_content_strategist",
+    "linkedin_content_creator",
+    "personal_brand_editor"
   ],
 
   "tasks": [
     {
-      "name": "monitor_financial_news",
+      "name": "research_ai_trends",
 
-      "description": "Research the latest credible financial-market developments related to {subject}. Identify no more than 8 highly relevant sources. Prioritize regulators, official company announcements, recognized financial publications, established research institutions, and reputable market-data providers. Read no more than 5 webpages in detail. If a webpage fails, redirects repeatedly, requires authentication, or cannot be accessed, skip it and use another source. Do not retry a failed URL more than once. Never invent URLs, publications, domains, files, statistics, or source names. Never use file:// URLs. Stop searching once sufficient credible evidence has been collected.",
+      "description": "Research the latest credible developments related to {subject} across AI Engineering, Data Science, Machine Learning, Generative AI, LLMs, RAG, agentic AI, AI automation, MLOps, data engineering, and production AI systems. Prioritize developments published within the last 7 days whenever suitable recent information is available. Focus on topics that are technically meaningful and relevant to AI Engineers, Data Scientists, ML Engineers, technical founders, engineering leaders, and recruiters hiring AI talent. Prioritize official company announcements, technical documentation, research papers, reputable engineering blogs, GitHub repositories, recognized AI publications, and credible practitioners. Perform no more than 5 focused search queries and read no more than 6 webpages in detail. Skip inaccessible, outdated, repetitive, promotional, or low-value sources. Do not retry failed URLs more than once. Never invent sources, URLs, statistics, product capabilities, benchmarks, research findings, or release details. Never use file:// URLs. Stop researching once sufficient evidence has been collected for one strong LinkedIn content angle.",
 
-      "expected_output": "A concise report containing 5 to 8 important financial-market developments related to {subject}. For each development, include the main finding, why it matters, the possible market implication, and the source URL. Clearly distinguish confirmed facts from interpretation. Exclude inaccessible and failed sources.",
+      "expected_output": "A concise, source-backed AI trend brief focused on one strong and timely content angle related to {subject}. Include: the key development, publication or announcement date, named companies or technologies involved, important technical details, why it matters to experienced AI and Data Science professionals, possible limitations or tradeoffs, practical implications, and 3 to 6 accessible source URLs. Clearly distinguish confirmed facts from interpretation. Exclude failed, inaccessible, duplicated, outdated, or unsupported sources.",
 
-      "agent": "lead_market_analyst"
+      "agent": "ai_trend_researcher"
     },
 
     {
-      "name": "analyze_market_data",
+      "name": "develop_technical_perspective",
 
-      "description": "Analyze the market research supplied through task context for {subject}. Identify major patterns, opportunities, risks, investor-sentiment signals, and possible economic implications. Use only the evidence supplied by the Lead Market Analyst. Do not conduct independent web searches, access local files, invent datasets, fabricate numerical findings, or claim to have produced charts that were not actually generated. When precise numerical data is unavailable, recommend an appropriate visualization and explain what it should show.",
+      "description": "Analyze the AI trend research supplied through task context and develop a thoughtful professional perspective about {subject}. Explain what the development means in practice for AI Engineers, Data Scientists, ML Engineers, technical teams, startups, and organizations building production AI systems. Identify the real engineering implications, implementation challenges, tradeoffs, risks, misconceptions, and opportunities. Look beyond the headline and determine what an experienced practitioner should actually understand. Connect the topic naturally to relevant areas such as LLM applications, RAG, AI agents, evaluation, MLOps, deployment, data quality, system design, scalability, observability, latency, cost, reliability, governance, or human oversight when supported by the research. Use only the supplied research. Do not search the web, open URLs, access files, invent personal experiences, fabricate technical claims, or introduce unsupported numbers. Avoid generic observations such as 'AI is transforming industries.'",
 
-      "expected_output": "A structured analysis of the most important market patterns, opportunities, risks, sentiment indicators, and content angles related to {subject}. Include evidence-based recommendations and, where useful, clearly described visualization concepts.",
+      "expected_output": "A structured technical perspective containing: one clear central insight, why the topic matters now, 3 to 5 practical implications, important engineering tradeoffs or limitations, one credible professional opinion, one useful lesson readers can apply, and 2 to 3 possible LinkedIn post angles. The analysis must be technically credible, specific, practical, and fully supported by the supplied research.",
 
-      "agent": "chief_data_strategist",
+      "agent": "technical_content_strategist",
 
       "context": [
-        "monitor_financial_news"
+        "research_ai_trends"
       ]
     },
 
     {
-      "name": "create_content",
+      "name": "create_linkedin_content",
 
-      "description": "Create high-quality financial content about {subject} using only the market-news report and strategic analysis supplied through task context. Produce a polished blog post and suitable social-media updates that clearly communicate the main developments, insights, opportunities, risks, and recommendations. Do not search the web, open URLs, access local files, invent citations, create fake sources, or add unsupported numerical claims.",
+      "description": "Create publication-ready LinkedIn content about {subject} using only the supplied AI trend research and technical perspective. Write from the viewpoint of a Data Scientist and AI Engineer with approximately four years of hands-on experience building AI, data, machine-learning, LLM, RAG, automation, and production systems. The writing should sound like a real practitioner sharing a useful observation, lesson, technical opinion, or recent discovery. Do not claim a specific personal experience unless it is supported by the provided context. When personal framing is useful, use honest language such as 'One pattern I keep noticing,' 'What stands out to me,' or 'From an engineering perspective.' Never pretend that the writer personally tested a product, attended an event, led a project, or achieved a result unless that fact is supplied. Avoid journalistic summaries, corporate marketing language, exaggerated hype, motivational clichés, generic AI introductions, and phrases commonly associated with AI-generated writing. Use short, natural paragraphs and varied sentence lengths. Build the post around one clear idea rather than summarizing every research finding. Include concrete technical details, a thoughtful viewpoint, practical value, and a natural closing question that encourages professional discussion. Do not search the web, open files, invent sources, fabricate statistics, or introduce unsupported claims.",
 
-      "expected_output": "A polished blog post and a set of social-media updates about {subject}. The content should be engaging, informative, evidence-based, and suitable for a financial audience. Include practical multimedia or infographic recommendations where appropriate, without claiming that ungenerated assets already exist.",
+      "expected_output": "Produce three clearly differentiated LinkedIn post options about {subject}: (1) Educational — teaches a practical technical lesson; (2) Opinion — presents a balanced and defensible professional perspective; and (3) Practitioner Insight — explains what the development means for people building real AI systems. Each option must include a strong non-clickbait opening, a clear central argument, specific technical substance, practical relevance, a natural discussion question, and 3 to 5 focused hashtags. Keep each post approximately 180 to 350 words. Also provide one concise visual or carousel concept for each option and one suggested first comment that adds value rather than repeating the post. Do not wrap the output in a Markdown code block.",
 
-      "agent": "creative_content_director",
+      "agent": "linkedin_content_creator",
 
       "context": [
-        "monitor_financial_news",
-        "analyze_market_data"
+        "research_ai_trends",
+        "develop_technical_perspective"
       ]
     },
 
     {
-      "name": "quality_assurance",
+      "name": "finalize_personal_brand_content",
 
-      "description": "Review and refine the content created about {subject}. Check factual consistency, clarity, structure, readability, tone, engagement, and alignment with the intended financial-media brand voice. Compare every important claim against the supplied market-news report and strategic analysis. Remove unsupported statements, invented citations, placeholder websites, fake URLs, repeated ideas, and references to files that were not provided. Do not introduce new facts, statistics, sources, or market claims. Format the final output in clean Markdown with clear headings, paragraphs, and bullet points where useful.",
+      "description": "Review the LinkedIn post options supplied directly through task context and finalize them for an experienced Data Science and AI Engineering personal brand. Compare factual and technical claims against the supplied AI research and technical perspective. Remove unsupported claims, invented personal experiences, fake citations, exaggerated conclusions, generic statements, repetition, excessive emojis, clickbait, corporate jargon, unnecessary headings, and language that sounds machine-generated. Rewrite sentences that could appear in hundreds of generic AI posts. Preserve useful technical detail while keeping the writing natural and readable. The voice should be thoughtful, technically credible, professionally confident, curious, practical, and human. It should sound like an experienced practitioner sharing knowledge with peers, not a journalist, marketer, influencer, or AI assistant. Ensure the opening earns attention without exaggeration. Ensure every paragraph adds information or perspective. Do not search the web, open files, read Markdown documents, call tools, describe your editing process, or introduce new facts. Return only the final ready-to-post package.",
 
-      "expected_output": "Return ONLY the final publication-ready content. Do not wrap the output inside ```markdown``` or any code block. Do not include explanations, reasoning, notes, introductions, conclusions about the task, or workflow descriptions. The output must be immediately ready for publishing and should contain: (1) a fully polished blog post with proper headings and formatting, (2) a polished LinkedIn post, (3) 3–5 infographic or visualization recommendations, and (4) a Sources section listing all referenced URLs. The response should require no further editing—simply copy and paste it for publication.",
-      
-      "agent": "chief_content_officer",
+      "expected_output": "Return ONLY the final publication-ready LinkedIn content package. Do not use a Markdown code block. Do not include planning, reasoning, workflow commentary, editing notes, or instructions to the user. Present three finalized options labeled Educational, Opinion, and Practitioner Insight. For each option, include: the complete LinkedIn post, one visual or carousel concept, one useful first comment, and 3 to 5 relevant hashtags. The posts must be immediately ready to copy and publish without further editing. All factual claims must be supported by the supplied research, and the writing must sound natural, original, technically experienced, and human.",
+
+      "agent": "personal_brand_editor",
 
       "context": [
-        "monitor_financial_news",
-        "analyze_market_data",
-        "create_content"
+        "research_ai_trends",
+        "develop_technical_perspective",
+        "create_linkedin_content"
       ]
     }
   ],
