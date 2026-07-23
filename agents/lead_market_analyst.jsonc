@@ -15,7 +15,9 @@
   "settings": {
     "verbose": false,
     "allow_delegation": false,
-    "max_iter": 8,
-    "planning": true
+    "max_iter": 6,
+    "planning": true,
+    "cache": true,
+    "max_retry_limit": 1
   }
 }

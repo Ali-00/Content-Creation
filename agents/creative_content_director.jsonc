@@ -13,6 +13,6 @@
     "verbose": false,
     "allow_delegation": false,
     "max_iter": 4,
-    "planning": true
+    "planning": false
   }
 }

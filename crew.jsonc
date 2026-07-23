@@ -53,8 +53,8 @@
 
       "description": "Review and refine the content created about {subject}. Check factual consistency, clarity, structure, readability, tone, engagement, and alignment with the intended financial-media brand voice. Compare every important claim against the supplied market-news report and strategic analysis. Remove unsupported statements, invented citations, placeholder websites, fake URLs, repeated ideas, and references to files that were not provided. Do not introduce new facts, statistics, sources, or market claims. Format the final output in clean Markdown with clear headings, paragraphs, and bullet points where useful.",
 
-      "expected_output": "A finalized Markdown content package about {subject}, including a polished blog post and refined social-media updates. The final content must be accurate, well-structured, readable, engaging, and fully supported by the supplied research and analysis.",
-
+      "expected_output": "Return ONLY the final publication-ready content. Do not wrap the output inside ```markdown``` or any code block. Do not include explanations, reasoning, notes, introductions, conclusions about the task, or workflow descriptions. The output must be immediately ready for publishing and should contain: (1) a fully polished blog post with proper headings and formatting, (2) a polished LinkedIn post, (3) 3–5 infographic or visualization recommendations, and (4) a Sources section listing all referenced URLs. The response should require no further editing—simply copy and paste it for publication.",
+      
       "agent": "chief_content_officer",
 
       "context": [
