@@ -301,4 +301,5 @@ The system automatically generates:
 # 👨‍💻 Author
 
 **Muzamal Ali**
+
 AI Engineer | Data Scientist
