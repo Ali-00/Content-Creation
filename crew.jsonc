@@ -5,7 +5,8 @@
     "ai_trend_researcher",
     "technical_content_strategist",
     "linkedin_content_creator",
-    "personal_brand_editor"
+    "personal_brand_editor",
+    "slack_publisher"
   ],
 
   "tasks": [
@@ -61,6 +62,19 @@
         "research_ai_trends",
         "develop_technical_perspective",
         "create_linkedin_content"
+      ]
+    },
+    {
+      "name": "publish_content_to_slack",
+
+      "description": "Send the complete finalized LinkedIn content package supplied through task context to the configured Slack channel. Use the Slack publishing tool exactly once. Do not rewrite, summarize, shorten, edit, or reformat the content. Send it exactly as produced by the Personal Brand Editor.",
+
+      "expected_output": "A confirmation that the finalized LinkedIn content package was successfully sent to Slack.",
+
+      "agent": "slack_publisher",
+
+      "context": [
+        "finalize_personal_brand_content"
       ]
     }
   ],
