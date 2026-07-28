@@ -8,10 +8,7 @@ from dotenv import load_dotenv
 from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
 
-from slack_bot.conversation_state import (
-    Conversation,
-    conversation_store,
-)
+from slack_bot.conversation_state import Conversation, conversation_store
 from slack_bot.crew_runner import run_content_crew
 
 
@@ -36,25 +33,13 @@ app = App(
     signing_secret=SLACK_SIGNING_SECRET,
 )
 
-# The LLM workflow is blocking and may take several minutes.
-# Running it in a worker keeps the Slack event listener responsive.
 executor = ThreadPoolExecutor(max_workers=2)
 
 
-VALID_POST_COUNTS = {1, 3, 5}
-
-STYLE_ALIASES = {
-    "educational": "Educational",
-    "education": "Educational",
-    "opinion": "Opinion",
-    "practitioner": "Practitioner Insight",
-    "practitioner insight": "Practitioner Insight",
-    "mixed": "Mixed",
-}
-
-
 def remove_bot_mention(text: str) -> str:
-    """Remove Slack's <@BOT_ID> markup from a message."""
+    """
+    Remove Slack bot mention markup such as <@U123ABC>.
+    """
 
     return re.sub(r"<@[A-Z0-9]+>", "", text).strip()
 
@@ -64,7 +49,7 @@ def split_slack_message(
     max_length: int = 3500,
 ) -> list[str]:
     """
-    Split long output into Slack-safe chunks while trying to preserve paragraphs.
+    Split long CrewAI output into Slack-safe message chunks.
     """
 
     text = text.strip()
@@ -85,7 +70,6 @@ def split_slack_message(
         if current:
             chunks.append(current)
 
-        # Handle a single paragraph longer than max_length.
         while len(paragraph) > max_length:
             chunks.append(paragraph[:max_length])
             paragraph = paragraph[max_length:]
@@ -104,10 +88,139 @@ def post_thread_message(
     thread_ts: str,
     text: str,
 ) -> None:
+    """
+    Post a normal text message inside a Slack thread.
+    """
+
     client.chat_postMessage(
         channel=channel_id,
         thread_ts=thread_ts,
         text=text,
+    )
+
+
+def post_count_question(
+    client,
+    channel_id: str,
+    thread_ts: str,
+) -> None:
+    """
+    Ask the user how many LinkedIn post options they want.
+    """
+
+    client.chat_postMessage(
+        channel=channel_id,
+        thread_ts=thread_ts,
+        text="How many LinkedIn post options should I generate?",
+        blocks=[
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": "*How many LinkedIn post options should I generate?*",
+                },
+            },
+            {
+                "type": "actions",
+                "block_id": "post_count_actions",
+                "elements": [
+                    {
+                        "type": "button",
+                        "text": {
+                            "type": "plain_text",
+                            "text": "1",
+                        },
+                        "value": "1",
+                        "action_id": "select_post_count_1",
+                    },
+                    {
+                        "type": "button",
+                        "text": {
+                            "type": "plain_text",
+                            "text": "3",
+                        },
+                        "value": "3",
+                        "action_id": "select_post_count_3",
+                    },
+                    {
+                        "type": "button",
+                        "text": {
+                            "type": "plain_text",
+                            "text": "5",
+                        },
+                        "value": "5",
+                        "action_id": "select_post_count_5",
+                    },
+                ],
+            },
+        ],
+    )
+
+
+def post_style_question(
+    client,
+    channel_id: str,
+    thread_ts: str,
+) -> None:
+    """
+    Ask the user which LinkedIn writing style they want.
+    """
+
+    client.chat_postMessage(
+        channel=channel_id,
+        thread_ts=thread_ts,
+        text="Which writing style should I use?",
+        blocks=[
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": "*Which writing style should I use?*",
+                },
+            },
+            {
+                "type": "actions",
+                "block_id": "content_style_actions",
+                "elements": [
+                    {
+                        "type": "button",
+                        "text": {
+                            "type": "plain_text",
+                            "text": "Educational",
+                        },
+                        "value": "Educational",
+                        "action_id": "select_style_educational",
+                    },
+                    {
+                        "type": "button",
+                        "text": {
+                            "type": "plain_text",
+                            "text": "Opinion",
+                        },
+                        "value": "Opinion",
+                        "action_id": "select_style_opinion",
+                    },
+                    {
+                        "type": "button",
+                        "text": {
+                            "type": "plain_text",
+                            "text": "Practitioner",
+                        },
+                        "value": "Practitioner Insight",
+                        "action_id": "select_style_practitioner",
+                    },
+                    {
+                        "type": "button",
+                        "text": {
+                            "type": "plain_text",
+                            "text": "Mixed",
+                        },
+                        "value": "Mixed",
+                        "action_id": "select_style_mixed",
+                    },
+                ],
+            },
+        ],
     )
 
 
@@ -122,7 +235,7 @@ def publish_crew_result(
     content_style: str,
 ) -> None:
     """
-    Run CrewAI and return its output to the originating Slack thread.
+    Run the CrewAI workflow and return its output to Slack.
     """
 
     try:
@@ -158,6 +271,8 @@ def publish_crew_result(
             )
 
     except Exception as exc:
+        print("CREWAI ERROR:", repr(exc))
+
         post_thread_message(
             client,
             channel_id,
@@ -181,6 +296,10 @@ def start_generation(
     client,
     conversation: Conversation,
 ) -> None:
+    """
+    Validate collected inputs and start CrewAI in a worker thread.
+    """
+
     if (
         not conversation.topic
         or conversation.post_count is None
@@ -216,7 +335,7 @@ def start_generation(
 @app.event("app_mention")
 def handle_app_mention(event, client, body, logger):
     """
-    Start a new content-generation conversation when the bot is mentioned.
+    Start a new content-generation workflow when the bot is mentioned.
     """
 
     event_id = body.get("event_id")
@@ -229,6 +348,12 @@ def handle_app_mention(event, client, body, logger):
     message_ts = event["ts"]
     thread_ts = event.get("thread_ts") or message_ts
     supplied_text = remove_bot_mention(event.get("text", ""))
+
+    print("\nAPP MENTION RECEIVED")
+    print("CHANNEL:", channel_id)
+    print("USER:", user_id)
+    print("THREAD:", thread_ts)
+    print("TOPIC:", repr(supplied_text))
 
     conversation = conversation_store.create(
         channel_id=channel_id,
@@ -245,12 +370,15 @@ def handle_app_mention(event, client, body, logger):
             client,
             channel_id,
             thread_ts,
-            (
-                f"Topic received: *{supplied_text}*\n\n"
-                "How many LinkedIn post options should I generate?\n"
-                "Reply with `1`, `3`, or `5`."
-            ),
+            f"Topic received: *{supplied_text}*",
         )
+
+        post_count_question(
+            client,
+            channel_id,
+            thread_ts,
+        )
+
         return
 
     post_thread_message(
@@ -258,83 +386,53 @@ def handle_app_mention(event, client, body, logger):
         channel_id,
         thread_ts,
         (
-            "What AI, Data Science, or AI Engineering topic "
-            "should the LinkedIn post cover?"
+            "Please mention me again and include the topic in the same message.\n\n"
+            "Example:\n"
+            "`@CrewAI Notifications Production RAG evaluation`"
         ),
     )
 
 
-@app.event("message")
-def handle_thread_reply(event, client, body, logger):
+@app.action(re.compile(r"^select_post_count_(1|3|5)$"))
+def handle_post_count_selection(ack, body, client, logger):
     """
-    Continue conversations from replies inside the bot-created thread.
+    Save the selected post count and show style buttons.
     """
 
-    # Ignore messages created by bots and message-change events.
-    if event.get("bot_id") or event.get("subtype"):
-        return
+    ack()
 
-    thread_ts = event.get("thread_ts")
+    try:
+        action = body["actions"][0]
+        post_count = int(action["value"])
 
-    # Only process thread replies here.
-    if not thread_ts:
-        return
+        channel_id = body["channel"]["id"]
+        user_id = body["user"]["id"]
 
-    event_id = body.get("event_id")
+        message = body["message"]
+        thread_ts = message.get("thread_ts") or message["ts"]
 
-    if not conversation_store.mark_event_processed(event_id):
-        return
-
-    channel_id = event["channel"]
-    user_id = event["user"]
-    text = event.get("text", "").strip()
-
-    conversation = conversation_store.get(
-        channel_id,
-        thread_ts,
-        user_id,
-    )
-
-    if conversation is None:
-        return
-
-    if conversation.step == "waiting_for_topic":
-        if not text:
-            post_thread_message(
-                client,
-                channel_id,
-                thread_ts,
-                "Please provide a topic.",
-            )
-            return
-
-        conversation.topic = text
-        conversation.step = "waiting_for_count"
-        conversation_store.save(conversation)
-
-        post_thread_message(
-            client,
+        conversation = conversation_store.get(
             channel_id,
             thread_ts,
-            (
-                "How many LinkedIn post options should I generate?\n"
-                "Reply with `1`, `3`, or `5`."
-            ),
+            user_id,
         )
-        return
 
-    if conversation.step == "waiting_for_count":
-        try:
-            post_count = int(text)
-        except ValueError:
-            post_count = 0
+        print("\nPOST COUNT ACTION RECEIVED")
+        print("CHANNEL:", channel_id)
+        print("USER:", user_id)
+        print("THREAD:", thread_ts)
+        print("COUNT:", post_count)
+        print("CONVERSATION:", conversation)
 
-        if post_count not in VALID_POST_COUNTS:
+        if conversation is None:
             post_thread_message(
                 client,
                 channel_id,
                 thread_ts,
-                "Please reply with `1`, `3`, or `5`.",
+                (
+                    "⚠️ This conversation has expired.\n"
+                    "Mention me again to start a new request."
+                ),
             )
             return
 
@@ -346,28 +444,71 @@ def handle_thread_reply(event, client, body, logger):
             client,
             channel_id,
             thread_ts,
-            (
-                "Which writing style should I use?\n\n"
-                "• `Educational`\n"
-                "• `Opinion`\n"
-                "• `Practitioner`\n"
-                "• `Mixed`"
-            ),
+            f"Post options selected: *{post_count}*",
         )
-        return
 
-    if conversation.step == "waiting_for_style":
-        normalized_style = text.lower().strip()
-        content_style = STYLE_ALIASES.get(normalized_style)
+        post_style_question(
+            client,
+            channel_id,
+            thread_ts,
+        )
 
-        if not content_style:
+    except Exception as exc:
+        logger.exception("Failed to process post count selection")
+        print("POST COUNT ERROR:", repr(exc))
+
+        channel_id = body.get("channel", {}).get("id")
+        message = body.get("message", {})
+        thread_ts = message.get("thread_ts") or message.get("ts")
+
+        if channel_id and thread_ts:
+            post_thread_message(
+                client,
+                channel_id,
+                thread_ts,
+                f"❌ Could not save the post count: `{exc}`",
+            )
+
+
+@app.action(re.compile(r"^select_style_"))
+def handle_style_selection(ack, body, client, logger):
+    """
+    Save the selected style and start CrewAI.
+    """
+
+    ack()
+
+    try:
+        action = body["actions"][0]
+        content_style = action["value"]
+
+        channel_id = body["channel"]["id"]
+        user_id = body["user"]["id"]
+
+        message = body["message"]
+        thread_ts = message.get("thread_ts") or message["ts"]
+
+        conversation = conversation_store.get(
+            channel_id,
+            thread_ts,
+            user_id,
+        )
+
+        print("\nSTYLE ACTION RECEIVED")
+        print("CHANNEL:", channel_id)
+        print("USER:", user_id)
+        print("THREAD:", thread_ts)
+        print("STYLE:", content_style)
+        print("CONVERSATION:", conversation)
+
+        if conversation is None:
             post_thread_message(
                 client,
                 channel_id,
                 thread_ts,
                 (
-                    "Please choose `Educational`, `Opinion`, "
-                    "`Practitioner`, or `Mixed`."
+                    "⚠️ This conversation has expired.\n"
+                    "Mention me again to start a new request."
                 ),
             )
             return
@@ -376,22 +517,43 @@ def handle_thread_reply(event, client, body, logger):
         conversation.step = "ready"
         conversation_store.save(conversation)
 
+        post_thread_message(
+            client,
+            channel_id,
+            thread_ts,
+            f"Writing style selected: *{content_style}*",
+        )
+
         start_generation(
             client=client,
             conversation=conversation,
         )
 
+    except Exception as exc:
+        logger.exception("Failed to process style selection")
+        print("STYLE ERROR:", repr(exc))
+
+        channel_id = body.get("channel", {}).get("id")
+        message = body.get("message", {})
+        thread_ts = message.get("thread_ts") or message.get("ts")
+
+        if channel_id and thread_ts:
+            post_thread_message(
+                client,
+                channel_id,
+                thread_ts,
+                f"❌ Could not save the writing style: `{exc}`",
+            )
+
 
 def main() -> None:
     print("Slack AI Content Bot is running in Socket Mode...")
+
     SocketModeHandler(
         app,
         SLACK_APP_TOKEN,
     ).start()
 
-@app.event("app_mention")
-def handle_app_mention(event, client, body, logger):
-    print("APP MENTION RECEIVED:", event)
 
 if __name__ == "__main__":
     main()
