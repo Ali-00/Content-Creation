@@ -6,7 +6,11 @@ report.md
 __pycache__/
 *.py[codz]
 *$py.class
+data/
+!data/.gitkeep
 
+memory/
+!memory/.gitkeep
 # C extensions
 *.so
 

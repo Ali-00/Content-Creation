@@ -18,10 +18,19 @@ class Conversation:
     channel_id: str
     thread_ts: str
     user_id: str
-    step: ConversationStep = "waiting_for_topic"
+
+    step: str = "waiting_for_count"
+
     topic: str | None = None
     post_count: int | None = None
     content_style: str | None = None
+
+    # New fields
+    generated_content: str | None = None
+    memory_context: str | None = None
+
+    created_at: float = 0.0
+    updated_at: float = 0.0
     processed_event_ids: set[str] = field(default_factory=set)
 
 

@@ -5,17 +5,16 @@
     "ai_trend_researcher",
     "technical_content_strategist",
     "linkedin_content_creator",
-    "personal_brand_editor",
-    "slack_publisher"
+    "personal_brand_editor"
   ],
 
   "tasks": [
     {
       "name": "research_ai_trends",
 
-      "description": "Research the latest credible developments related to {subject} across AI Engineering, Data Science, Machine Learning, Generative AI, LLMs, RAG, agentic AI, AI automation, MLOps, data engineering, and production AI systems. Prioritize developments published within the last 7 days whenever suitable recent information is available. Focus on topics that are technically meaningful and relevant to AI Engineers, Data Scientists, ML Engineers, technical founders, engineering leaders, and recruiters hiring AI talent. Prioritize official company announcements, technical documentation, research papers, reputable engineering blogs, GitHub repositories, recognized AI publications, and credible practitioners. Perform no more than 5 focused search queries and read no more than 6 webpages in detail. Skip inaccessible, outdated, repetitive, promotional, or low-value sources. Do not retry failed URLs more than once. Never invent sources, URLs, statistics, product capabilities, benchmarks, research findings, or release details. Never use file:// URLs. Stop researching once sufficient evidence has been collected for one strong LinkedIn content angle.",
+      "description": "Research one recent and credible development related to {subject}. Prioritize official product announcements, official technical documentation, reputable engineering blogs, GitHub release pages, and short research summaries published within the last 30 days. Perform a maximum of 3 focused search queries. Open a maximum of 4 webpages. Never open or read full PDF files, long academic surveys, books, theses, conference proceedings, reference lists, documentation indexes, or webpages longer than approximately 5,000 words. If a search result is a PDF or a large academic paper, use only its search-result summary or abstract and do not open the complete document. Spend no more than one tool call on each source. Do not retry failed or slow sources. Stop researching immediately after finding 2 to 4 credible sources that support one strong content angle. Never invent sources, dates, statistics, benchmarks, product capabilities, or release details. Review the following approved-content memory and avoid repeating its main angles: {recent_content_memory}.",
 
-      "expected_output": "A concise, source-backed AI trend brief focused on one strong and timely content angle related to {subject}. Include: the key development, publication or announcement date, named companies or technologies involved, important technical details, why it matters to experienced AI and Data Science professionals, possible limitations or tradeoffs, practical implications, and 3 to 6 accessible source URLs. Clearly distinguish confirmed facts from interpretation. Exclude failed, inaccessible, duplicated, outdated, or unsupported sources.",
+      "expected_output": "A concise research brief of no more than 600 words covering one timely angle related to {subject}. Include the development, publication date, relevant company or technology, important technical details, why it matters, practical limitations, and 2 to 4 accessible source URLs. Do not include long quotations, complete paper contents, reference lists, bibliographies, author biographies, raw webpage text, or tool logs.",
 
       "agent": "ai_trend_researcher"
     },
@@ -23,9 +22,9 @@
     {
       "name": "develop_technical_perspective",
 
-      "description": "Analyze the AI trend research supplied through task context and develop a thoughtful professional perspective about {subject}. Explain what the development means in practice for AI Engineers, Data Scientists, ML Engineers, technical teams, startups, and organizations building production AI systems. Identify the real engineering implications, implementation challenges, tradeoffs, risks, misconceptions, and opportunities. Look beyond the headline and determine what an experienced practitioner should actually understand. Connect the topic naturally to relevant areas such as LLM applications, RAG, AI agents, evaluation, MLOps, deployment, data quality, system design, scalability, observability, latency, cost, reliability, governance, or human oversight when supported by the research. Use only the supplied research. Do not search the web, open URLs, access files, invent personal experiences, fabricate technical claims, or introduce unsupported numbers. Avoid generic observations such as 'AI is transforming industries.'",
+      "description": "Analyze the AI trend research supplied through task context and develop a thoughtful professional perspective about {subject}. Explain what the development means in practice for AI Engineers, Data Scientists, ML Engineers, technical teams, startups, and organizations building production AI systems. Identify the real engineering implications, implementation challenges, tradeoffs, risks, misconceptions, and opportunities. Look beyond the headline and determine what an experienced practitioner should actually understand. Connect the topic naturally to relevant areas such as LLM applications, RAG, AI agents, evaluation, MLOps, deployment, data quality, system design, scalability, observability, latency, cost, reliability, governance, or human oversight when supported by the research. Use only the supplied research. Do not search the web, open URLs, access files, invent personal experiences, fabricate technical claims, or introduce unsupported numbers. Avoid generic observations such as 'AI is transforming industries.'\n\nReview the following approved-content memory:\n\n{recent_content_memory}\n\nDevelop a different central insight, argument sequence and practical takeaway from the previous approved posts.",
 
-      "expected_output": "A structured technical perspective containing: one clear central insight, why the topic matters now, 3 to 5 practical implications, important engineering tradeoffs or limitations, one credible professional opinion, one useful lesson readers can apply, and 2 to 3 possible LinkedIn post angles. The analysis must be technically credible, specific, practical, and fully supported by the supplied research.",
+      "expected_output": "A structured technical perspective containing one clear and original central insight, why the topic matters now, 3 to 5 practical implications, important engineering tradeoffs or limitations, one credible professional opinion, one useful lesson readers can apply, and 2 to 3 possible LinkedIn post angles. The analysis must be technically credible, specific, practical, supported by the supplied research and meaningfully different from the approved-content memory.",
 
       "agent": "technical_content_strategist",
 
@@ -37,9 +36,9 @@
     {
       "name": "create_linkedin_content",
 
-      "description": "Create publication-ready LinkedIn content about {subject} using only the supplied AI trend research and technical perspective. Generate exactly {post_count} post option or options using the requested content style: {content_style}. When the requested style is Mixed, vary the options between Educational, Opinion, and Practitioner Insight. When one specific style is requested, ensure every generated option follows that style while still using distinct hooks and angles. Write from the viewpoint of a Data Scientist and AI Engineer with approximately four years of hands-on experience. Do not invent personal experiences, project results, companies, statistics, or claims. Use natural paragraphs, concrete technical substance, honest tradeoffs, and a professional discussion question. Do not search the web, read files, or introduce unsupported information.",
+      "description": "Create publication-ready LinkedIn content about {subject} using only the supplied AI trend research and technical perspective. Generate exactly {post_count} post option or options using the requested content style: {content_style}. When the requested style is Mixed, vary the options between Educational, Opinion, and Practitioner Insight. When one specific style is requested, ensure every generated option follows that style while still using distinct hooks and angles. Write from the viewpoint of a Data Scientist and AI Engineer with approximately four years of hands-on experience. Do not invent personal experiences, project results, companies, statistics, or claims. Use natural paragraphs, concrete technical substance, honest tradeoffs, and a professional discussion question. Do not search the web, read files, or introduce unsupported information.\n\nReview this approved-content memory:\n\n{recent_content_memory}\n\nDo not repeat previous hooks, central arguments, argument sequences, examples, conclusions, practical takeaways, or closing questions. Do not simply rewrite or paraphrase a previously approved post. Use a clearly different technical or practitioner angle.",
 
-      "expected_output": "Produce exactly {post_count} publication-ready LinkedIn post option or options about {subject} in the requested {content_style} style. Each option must contain a strong natural hook, one focused argument, concrete technical value, a professional closing question, 3 to 5 hashtags, one visual or carousel concept, and one useful first comment. Keep each post approximately 180 to 350 words. Do not include empty placeholder options, planning commentary, or Markdown code fences.",
+      "expected_output": "Produce exactly {post_count} publication-ready LinkedIn post option or options about {subject} in the requested {content_style} style. Each option must contain a strong natural hook, one focused and original argument, concrete technical value, a professional closing question, 3 to 5 hashtags, one visual or carousel concept, and one useful first comment. Keep each post approximately 180 to 350 words. Do not include empty placeholder options, planning commentary, or Markdown code fences.",
 
       "agent": "linkedin_content_creator",
 
@@ -52,9 +51,9 @@
     {
       "name": "finalize_personal_brand_content",
 
-      "description": "Review and refine the LinkedIn content supplied through task context for the topic {subject}. The requested number of final options is {post_count}, and the requested content style is {content_style}. Ensure the final package contains exactly that number of options and follows the selected style. Compare factual and technical claims against the supplied research and technical perspective. Remove unsupported claims, invented personal experiences, fake citations, generic statements, repetition, excessive emojis, clickbait, corporate jargon, and machine-generated language. Do not search the web, read files, call tools, describe your editing process, or introduce new facts.",
-      
-      "expected_output": "Return ONLY the final publication-ready LinkedIn content package. Produce exactly {post_count} finalized post option or options in the requested {content_style} style. Do not use a Markdown code block. Do not include planning, reasoning, workflow commentary, editing notes, or instructions. For each option, include the complete LinkedIn post, one visual or carousel concept, one useful first comment, and 3 to 5 relevant hashtags. The result must be ready to copy and publish without further editing.",
+      "description": "Review and refine the LinkedIn content supplied through task context for the topic {subject}. The requested number of final options is {post_count}, and the requested content style is {content_style}. Ensure the final package contains exactly that number of options and follows the selected style. Compare factual and technical claims against the supplied research and technical perspective. Remove unsupported claims, invented personal experiences, fake citations, generic statements, repetition, excessive emojis, clickbait, corporate jargon, and machine-generated language. Do not search the web, read files, call tools, describe your editing process, or introduce new facts.\n\nPerform a final originality check using:\n\n{recent_content_memory}\n\nRewrite anything that substantially repeats a previous approved post's hook, thesis, argument structure, examples, conclusion, practical takeaway, or closing question.",
+
+      "expected_output": "Return ONLY the final publication-ready LinkedIn content package. Produce exactly {post_count} finalized post option or options in the requested {content_style} style. Do not use a Markdown code block. Do not include planning, reasoning, workflow commentary, editing notes, memory notes, or instructions. For each option, include the complete LinkedIn post, one visual or carousel concept, one useful first comment, and 3 to 5 relevant hashtags. The result must be ready to copy and publish without further editing.",
 
       "agent": "personal_brand_editor",
 
@@ -63,27 +62,17 @@
         "develop_technical_perspective",
         "create_linkedin_content"
       ]
-    },
-    {
-      "name": "publish_content_to_slack",
-
-      "description": "Send the complete finalized LinkedIn content package supplied through task context to the configured Slack channel. Use the Slack publishing tool exactly once. Do not rewrite, summarize, shorten, edit, or reformat the content. Send it exactly as produced by the Personal Brand Editor.",
-
-      "expected_output": "A confirmation that the finalized LinkedIn content package was successfully sent to Slack.",
-
-      "agent": "slack_publisher",
-
-      "context": [
-        "finalize_personal_brand_content"
-      ]
     }
   ],
 
   "process": "sequential",
-  "verbose": true,
+  "verbose": false,
   "memory": false,
+
   "inputs": {
-  "post_count": 3,
-  "content_style": "Mixed"
+    "subject": "Production AI systems",
+    "post_count": 3,
+    "content_style": "Mixed",
+    "recent_content_memory": "No approved previous content exists. Create original content."
   }
 }
